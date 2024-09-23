@@ -15,7 +15,7 @@ fuel requirements.
 
 1. **Clone the repository:**
    ```sh
-   git clone <repository-url>
+   git clone https://github.com/T-Lind/space-mission-planner.git
    cd space_mission_planner
    ```
 
