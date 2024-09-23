@@ -1,3 +1,4 @@
 AI_README.MD
 STRUCTURE.MD
 cmake-build-debug/
+*.xml

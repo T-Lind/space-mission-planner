@@ -1,4 +1,4 @@
-### Space Mission Planner (C++)
+## Space Mission Planner (C++)
 
 **Overview:**
 This project is a (WIP) C++ program designed to help plan space missions. Users can input mission parameters like the

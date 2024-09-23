@@ -7,7 +7,7 @@ class PropulsionSystem {
 public:
     PropulsionSystem();
 
-    // Set the propulsion type (e.g., "Chemical", "Ion", etc.)
+    // Set the propulsion type (e.g., "Chemical", "Ion", "Nuclear")
     void setPropulsionType(const std::string& type);
 
     // Get the specific impulse (Isp) of the selected propulsion system (in seconds)
@@ -21,7 +21,7 @@ private:
     double specificImpulse; // Specific impulse (Isp) in seconds
     double thrust;          // Thrust in Newtons
 
-    void configurePropulsion(); // Internal function to set values based on propulsionType
+    void configurePropulsion();
 };
 
 #endif

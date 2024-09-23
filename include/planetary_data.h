@@ -8,10 +8,8 @@ class PlanetaryData {
 public:
     PlanetaryData();
 
-    // Fetch distance from Earth to the target planet (in millions of km)
     double getDistanceToPlanet(const std::string& planet) const;
 
-    // Fetch mass of the target planet (in kg)
     double getPlanetMass(const std::string& planet) const;
 
     // Additional planet data retrieval functions can be added later
@@ -21,7 +19,7 @@ private:
     std::unordered_map<std::string, double> planetDistances; // Distance in million km
     std::unordered_map<std::string, double> planetMasses;    // Mass in kg
 
-    void initializeData(); // Load hardcoded planetary data or later from external source
+    void initializeData(); // Load hardcoded planetary data
 };
 
 #endif

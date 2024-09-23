@@ -20,6 +20,10 @@ void MissionPlanner::getUserInput() {
     std::cin >> fuelBudget;
     std::cout << "Enter propulsion type (Chemical, Ion, Nuclear): ";
     std::cin >> propulsionType;
+    std::cout << "Enter window duration (days): ";
+    std::cin >> windowDuration;
+    numberOfWindows = 5;
+
 
     int transferTypeInput;
     std::cout << "Enter transfer type (0: Hohmann, 1: Bi-Elliptic, 2: Fast Transfer): ";
@@ -36,7 +40,8 @@ void MissionPlanner::getUserInput() {
 void MissionPlanner::calculateMission() {
     propulsionSystem.setPropulsionType(propulsionType);
 
-    double deltaV = trajectoryCalculator.calculateTrajectory(targetPlanet, payloadWeight, propulsionSystem, transferType);
+    // Note that assigning deltaV here overwrites the member variable!
+    deltaV = trajectoryCalculator.calculateTrajectory(targetPlanet, payloadWeight, propulsionSystem, transferType);
     if (deltaV == -1) {
         std::cerr << "Invalid planet name or transfer type!" << std::endl;
         return;
@@ -46,11 +51,12 @@ void MissionPlanner::calculateMission() {
 }
 
 void MissionPlanner::displayResults() {
+    std::cout << "Delta-V required: " << deltaV << " m/s" << std::endl;
+
     double requiredFuelMass = fuelEstimator.calculateFuelMass();
     std::cout << "Required fuel mass: " << requiredFuelMass << " kg" << std::endl;
 
-    int numberOfWindows = 5;
-    std::vector<std::pair<std::string, std::string>> launchWindows = launchWindowCalculator.calculateLaunchWindows(targetPlanet, numberOfWindows);
+    std::vector<std::pair<std::string, std::string>> launchWindows = launchWindowCalculator.calculateLaunchWindows(targetPlanet, numberOfWindows, windowDuration);
 
     std::cout << "Launch windows for " << targetPlanet << ":" << std::endl;
     for (const auto& window : launchWindows) {

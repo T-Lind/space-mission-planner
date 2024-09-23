@@ -19,7 +19,10 @@ private:
     std::string targetPlanet;
     double payloadWeight;
     double fuelBudget;
+    double windowDuration;
+    int numberOfWindows;
     std::string propulsionType;
+
     TrajectoryCalculator::TransferType transferType;
 
     TrajectoryCalculator trajectoryCalculator;
@@ -27,6 +30,8 @@ private:
     LaunchWindowCalculator launchWindowCalculator;
     PlanetaryData planetaryData;
     PropulsionSystem propulsionSystem;
+
+    double deltaV;  // output variable to keep track of
 
     void calculateMission();
 
