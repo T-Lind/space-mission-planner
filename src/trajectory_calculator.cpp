@@ -15,11 +15,11 @@ TrajectoryCalculator::TrajectoryCalculator() {}
 // Calculate the optimal trajectory based on the selected transfer type
 double TrajectoryCalculator::calculateTrajectory(const std::string& targetPlanet, double payloadWeight, const PropulsionSystem& propulsionSystem, TransferType transferType) {
     switch (transferType) {
-        case HOHMANN:
+        case TransferType::HOHMANN:
             return hohmannTransfer(targetPlanet, payloadWeight, propulsionSystem);
-        case BI_ELLIPTIC:
+        case TransferType::BI_ELLIPTIC:
             return biEllipticTransfer(targetPlanet, payloadWeight, propulsionSystem);
-        case FAST_TRANSFER:
+        case TransferType::FAST_TRANSFER:
             return fastTransfer(targetPlanet, payloadWeight, propulsionSystem);
         default:
             std::cerr << "Invalid transfer type!" << std::endl;
@@ -29,6 +29,7 @@ double TrajectoryCalculator::calculateTrajectory(const std::string& targetPlanet
 
 // Perform Hohmann transfer calculation
 double TrajectoryCalculator::hohmannTransfer(const std::string& targetPlanet, double payloadWeight, const PropulsionSystem& propulsionSystem) {
+    std::cout << "Calculating Hohmann transfer to " << targetPlanet << std::endl;
     double planetDistanceMillionKm = planetaryData.getDistanceToPlanet(targetPlanet);
     if (planetDistanceMillionKm == -1) {
         return -1; // Return -1 for invalid planet
@@ -45,23 +46,29 @@ double TrajectoryCalculator::hohmannTransfer(const std::string& targetPlanet, do
 
 // Perform Bi-Elliptic transfer calculation
 double TrajectoryCalculator::biEllipticTransfer(const std::string& targetPlanet, double payloadWeight, const PropulsionSystem& propulsionSystem) {
+    std::cout << "Calculating Bi-Elliptic transfer to " << targetPlanet << std::endl;
     double planetDistanceMillionKm = planetaryData.getDistanceToPlanet(targetPlanet);
     if (planetDistanceMillionKm == -1) {
         throw std::invalid_argument("Invalid planet");
     }
 
     double targetOrbitRadius = planetDistanceMillionKm * 1e9 * 1000;
-    double intermediateOrbitRadius = 2 * targetOrbitRadius; // Example intermediate orbit radius
+    double intermediateOrbitRadius = 2 * targetOrbitRadius; // Example intermediate orbit radius, typically larger than target orbit
 
+    // First burn: from Earth's orbit to intermediate orbit
     double deltaV1 = sqrt(G * massEarth / earthOrbitRadius) * (sqrt(2 * intermediateOrbitRadius / (earthOrbitRadius + intermediateOrbitRadius)) - 1);
+
+    // Second burn: from intermediate orbit to target orbit
     double deltaV2 = sqrt(G * massEarth / intermediateOrbitRadius) * (sqrt(2 * targetOrbitRadius / (intermediateOrbitRadius + targetOrbitRadius)) - sqrt(2 * earthOrbitRadius / (earthOrbitRadius + intermediateOrbitRadius)));
+
+    // Third burn: circularizing at target orbit (if necessary)
     double deltaV3 = sqrt(G * massEarth / targetOrbitRadius) * (1 - sqrt(2 * intermediateOrbitRadius / (intermediateOrbitRadius + targetOrbitRadius)));
 
     return deltaV1 + deltaV2 + deltaV3;
 }
 
-
 double TrajectoryCalculator::fastTransfer(const std::string& targetPlanet, double payloadWeight, const PropulsionSystem& propulsionSystem) {
+    std::cout << "Calculating Fast transfer to " << targetPlanet << std::endl;
     double planetDistanceMillionKm = planetaryData.getDistanceToPlanet(targetPlanet);
     if (planetDistanceMillionKm == -1) {
         throw std::invalid_argument("Invalid planet");
@@ -69,13 +76,15 @@ double TrajectoryCalculator::fastTransfer(const std::string& targetPlanet, doubl
 
     double targetOrbitRadius = planetDistanceMillionKm * 1e9 * 1000;
 
+    // Similar deltaV as Hohmann but scaled up for faster travel
     double deltaV1 = sqrt(G * massEarth / earthOrbitRadius) * (sqrt(2 * targetOrbitRadius / (earthOrbitRadius + targetOrbitRadius)) - 1);
     double deltaV2 = sqrt(G * massEarth / targetOrbitRadius) * (1 - sqrt(2 * earthOrbitRadius / (earthOrbitRadius + targetOrbitRadius)));
 
-    // Increase deltaV1 and deltaV2 by a factor to simulate a faster transfer
-    double fastTransferFactor = 1.5; // Example factor, adjust as needed
+    // Use a higher multiplier to represent faster transfer
+    double fastTransferFactor = 2.0; // Adjust for a much faster transfer
     deltaV1 *= fastTransferFactor;
     deltaV2 *= fastTransferFactor;
 
     return deltaV1 + deltaV2;
 }
+

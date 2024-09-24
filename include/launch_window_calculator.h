@@ -2,24 +2,25 @@
 #define LAUNCH_WINDOW_CALCULATOR_H
 
 #include <string>
-#include <vector>
-#include <utility>
-#include <unordered_map>
+#include "planetary_data.h"
 
 class LaunchWindowCalculator {
 public:
+    // Constructor
     LaunchWindowCalculator();
 
-    std::vector<std::pair<std::string, std::string>>
-    calculateLaunchWindows(const std::string &targetPlanet, int numberOfWindows, int windowDuration);
+    // Calculate the next launch window based on the current date
+    // Returns time in days until the next launch window
+    int calculateNextLaunchWindow(const std::string& targetPlanet, int currentDayOfYear);
 
 private:
-    double calculateSynodicPeriod(double orbitalPeriod1, double orbitalPeriod2) const;
+    PlanetaryData planetaryData; // To retrieve planetary orbital and position data
 
-    double getOrbitalPeriod(const std::string& planet) const;
+    // Calculate the current phase angle between Earth and the target planet
+    static double calculatePhaseAngle(double earthPosition, double targetPosition);
 
-    std::unordered_map<std::string, double> orbitalPeriods;
-
+    // Find the next time the phase angle matches the optimal value for a transfer
+    static int findNextOptimalLaunchWindow(double currentPhaseAngle, double optimalPhaseAngle, double planetOrbitalPeriod);
 };
 
 #endif

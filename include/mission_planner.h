@@ -11,7 +11,14 @@
 class MissionPlanner {
 public:
     MissionPlanner();
+
     void run();
+    void run(bool userInput);
+
+    void setData(std::string targetPlanet, double payloadWeight, double fuelBudget, int windowDuration,
+                 int numberOfWindows, std::string propulsionType, TrajectoryCalculator::TransferType transferType);
+
+    void saveDataForVaryingPayloads(const std::string& filename, double minPayload, double maxPayload, double stepSize);
 
 private:
     void getUserInput();
@@ -19,7 +26,7 @@ private:
     std::string targetPlanet;
     double payloadWeight;
     double fuelBudget;
-    double windowDuration;
+    int windowDuration;
     int numberOfWindows;
     std::string propulsionType;
 

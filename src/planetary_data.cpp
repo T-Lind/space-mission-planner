@@ -1,44 +1,67 @@
 #include "../include/planetary_data.h"
-#include <stdexcept>
+#include <cmath> // For fmod
 
+// Constructor
 PlanetaryData::PlanetaryData() {
-    initializeData();
+    // Initialize planetary distances in million km
+    distanceToPlanet["Mars"] = 78.34;
+    distanceToPlanet["Venus"] = 41.44;
+    distanceToPlanet["Earth"] = 0.0; // Earth is the reference point
+    // Add more planets...
+
+    // Initialize planetary masses in kg
+    planetMass["Mars"] = 6.4171e23;
+    planetMass["Venus"] = 4.8675e24;
+    planetMass["Earth"] = 5.972e24;
+
+    // Add more planets...
+
+    // Initialize planetary orbital periods in days
+    planetOrbitalPeriod["Mars"] = 687.0; // Mars orbital period in Earth days
+    planetOrbitalPeriod["Venus"] = 224.7; // Venus orbital period in Earth days
+    planetOrbitalPeriod["Earth"] = 365.0; // Earth orbital period in Earth days
 }
 
-double PlanetaryData::getDistanceToPlanet(const std::string& planet) const {
-    if (planetDistances.find(planet) != planetDistances.end()) {
-        return planetDistances.at(planet);
+// Get distance to planet
+double PlanetaryData::getDistanceToPlanet(const std::string& planetName) {
+    if (distanceToPlanet.find(planetName) != distanceToPlanet.end()) {
+        return distanceToPlanet[planetName];
     } else {
-        throw std::invalid_argument("Unknown planet: " + planet);
+        return -1; // Invalid planet
     }
 }
 
-double PlanetaryData::getPlanetMass(const std::string& planet) const {
-    if (planetMasses.find(planet) != planetMasses.end()) {
-        return planetMasses.at(planet);
+// Get mass of planet
+double PlanetaryData::getPlanetMass(const std::string& planetName) {
+    if (planetMass.find(planetName) != planetMass.end()) {
+        return planetMass[planetName];
     } else {
-        throw std::invalid_argument("Unknown planet: " + planet);
+        return -1; // Invalid planet
     }
 }
 
-void PlanetaryData::initializeData() {
-    planetDistances = {
-            {"Mercury", 91.69},
-            {"Venus", 41.40},
-            {"Mars", 78.34},
-            {"Jupiter", 628.73},
-            {"Saturn", 1277.42},
-            {"Uranus", 2721.85},
-            {"Neptune", 4354.77}
-    };
+// Get orbital period of planet
+double PlanetaryData::getPlanetOrbitalPeriod(const std::string& planetName) {
+    if (planetOrbitalPeriod.find(planetName) != planetOrbitalPeriod.end()) {
+        return planetOrbitalPeriod[planetName];
+    } else {
+        return -1; // Invalid planet
+    }
+}
 
-    planetMasses = {
-            {"Mercury", 3.3011e23},  // Mass in kg
-            {"Venus", 4.8675e24},
-            {"Mars", 6.4171e23},
-            {"Jupiter", 1.8982e27},
-            {"Saturn", 5.6834e26},
-            {"Uranus", 8.6810e25},
-            {"Neptune", 1.02413e26}
-    };
+// Calculate the angular position of the planet in its orbit (in degrees) based on the day of the year
+double PlanetaryData::getPlanetPosition(const std::string& planetName, int dayOfYear) {
+    // Retrieve the orbital period of the planet
+    double orbitalPeriod = getPlanetOrbitalPeriod(planetName);
+
+    if (orbitalPeriod == -1) {
+        // Invalid planet name
+        return -1;
+    }
+
+    // Calculate the angular position (theta) using the formula:
+    // theta = (360 * dayOfYear / orbitalPeriod) % 360
+    double position = fmod((360.0 * dayOfYear) / orbitalPeriod, 360.0);
+
+    return position;
 }

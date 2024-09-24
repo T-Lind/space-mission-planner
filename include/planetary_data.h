@@ -8,18 +8,27 @@ class PlanetaryData {
 public:
     PlanetaryData();
 
-    double getDistanceToPlanet(const std::string& planet) const;
+    // Retrieve distance to a planet in million km
+    double getDistanceToPlanet(const std::string& planetName);
 
-    double getPlanetMass(const std::string& planet) const;
+    // Retrieve mass of a planet in kg
+    double getPlanetMass(const std::string& planetName);
 
-    // Additional planet data retrieval functions can be added later
-    // Example: Orbital period, gravity, etc.
+    // Retrieve orbital period of a planet in days
+    double getPlanetOrbitalPeriod(const std::string& planetName);
+
+    // Retrieve the current angular position of a planet (in degrees) based on the day of the year
+    double getPlanetPosition(const std::string& planetName, int dayOfYear);
 
 private:
-    std::unordered_map<std::string, double> planetDistances; // Distance in million km
-    std::unordered_map<std::string, double> planetMasses;    // Mass in kg
+    // Planetary distance data in million km
+    std::unordered_map<std::string, double> distanceToPlanet;
 
-    void initializeData(); // Load hardcoded planetary data
+    // Planetary mass data in kg
+    std::unordered_map<std::string, double> planetMass;
+
+    // Planetary orbital period data in days
+    std::unordered_map<std::string, double> planetOrbitalPeriod;
 };
 
 #endif
