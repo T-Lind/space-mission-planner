@@ -12,7 +12,7 @@ public:
     double calculateTrajectory(const std::string& targetPlanet, double payloadWeight, const PropulsionSystem& propulsionSystem);
 
     // Different types of transfer trajectories
-    enum TransferType {
+    enum class TransferType {
         HOHMANN,
         BI_ELLIPTIC,
         FAST_TRANSFER
